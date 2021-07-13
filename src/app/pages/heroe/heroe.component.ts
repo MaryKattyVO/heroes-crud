@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HeroeModel } from '../../models/heroe.model';
+import { HeroesService } from '../../service/heroes.service';
 
 @Component({
   selector: 'app-heroe',
@@ -10,7 +11,7 @@ import { HeroeModel } from '../../models/heroe.model';
 export class HeroeComponent implements OnInit {
   heroe: HeroeModel = new HeroeModel();
 
-  constructor() { }
+  constructor( private heroeService: HeroesService) { }
 
   ngOnInit(): void {
   }
@@ -21,7 +22,10 @@ export class HeroeComponent implements OnInit {
       console.log('Formulario no valido')
       return;
     }
-    console.log(form);
-    console.log(this.heroe)
+    this.heroeService.crearHeroe(this.heroe)
+      .subscribe( resp => {
+        console.log(resp);
+        this.heroe = resp
+      })
   }
 }
