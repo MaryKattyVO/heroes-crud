@@ -21,4 +21,14 @@ export class HeroesService {
         })
       );
   }
+
+  actualizarHeroe( heroe: HeroeModel) {
+
+    const heroTemp = {
+      ...heroe
+    }
+
+    delete heroTemp.id;
+    return this.http.put(`${this.url}/heroes/${heroe.id}.json`, heroTemp)
+  }
 }
