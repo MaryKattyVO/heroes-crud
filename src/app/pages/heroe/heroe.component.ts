@@ -13,24 +13,23 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./heroe.component.css']
 })
 export class HeroeComponent implements OnInit {
-  heroe: any;
+  heroe: any = new HeroeModel();
 
-  constructor( private heroeService: HeroesService,
-                private route: ActivatedRoute) { }
+  constructor(  private heroeService: HeroesService,
+                private route: ActivatedRoute) { 
+                  
+                }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log("INGRESA AQUÍ 1")
-    console.log(id);
-    console.log("INGRESA AQUÍ 2")
+
     if( id !== 'nuevo') {
-      this.heroeService.getHeroe(id)
-        .subscribe((resp: any) => {
-          console.log("INGRESA AQUÍ 3")
-          // console.log(resp);
+
+      this.heroeService.getHeroe( id )
+        .subscribe((resp: any ) => {
           this.heroe = resp;
           this.heroe.id = id;
-        })
+        });
     }
 
   }
@@ -41,7 +40,14 @@ export class HeroeComponent implements OnInit {
       console.log('Formulario no valido')
       return;
     }
+    Swal.fire({
+      title: 'Espere',
+      text: 'Guardando información',
+      icon: 'info',
+      allowOutsideClick: false
+    });
     Swal.showLoading();
+
 
     let peticion: Observable<any>;
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HeroesService } from '../../service/heroes.service';
 import { HeroeModel } from '../../models/heroe.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-heroes',
@@ -10,15 +11,32 @@ import { HeroeModel } from '../../models/heroe.model';
 export class HeroesComponent implements OnInit {
 
   heroes: HeroeModel[] = [];
+  cargando = false;
   constructor( private heroesService: HeroesService) { }
 
   ngOnInit(): void {
-
+    this.cargando = true;
     this.heroesService.getHeroes()
-      .subscribe(resp => {
-        console.log(resp);
+      .subscribe((resp: any) => {
         this.heroes = resp;
+        this.cargando = false;
       });
   }
 
+  borrarHeroe( heroe: any, i: number) {
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: `Está seguro que desea borrar a ${ heroe.nombre }`,
+      icon: 'question',
+      showConfirmButton: true,
+      showCancelButton: true
+    }).then( resp => {
+
+      if( resp.value) {
+        this.heroes.splice(i, 1);
+        this.heroesService.borrarHeroe(heroe.id).subscribe();
+      }
+    });
+
+  }
 }
